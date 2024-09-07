@@ -1,0 +1,121 @@
+# Creates a Role 'namespace-admin-r' Specific to project namespace
+---
+kind: Role
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: namespace-admin-r
+  namespace: your_namespace_name
+rules:
+  # "roles" rules
+- apiGroups: ["rbac.authorization.k8s.io"]
+  resources: ["roles"]
+  verbs: ["get", "list", "watch", "create", "update", "delete"]
+  # "rolebindings" rules
+- apiGroups: ["rbac.authorization.k8s.io"]
+  resources: ["rolebindings"]
+  verbs: ["get", "list", "watch", "create", "update", "delete"]  
+  # Services
+- apiGroups: [""]
+  resources: ["services"]
+  verbs: ["get", "list", "view", "create", "update", "delete"]
+  # services endpoints
+- apiGroups: [""]
+  resources: ["endpoints"]
+  verbs: ["get", "list", "watch", "create", "update", "delete"] 
+  # "Pods" rules
+- apiGroups: [""]
+  resources: ["pods"]
+  verbs: ["get", "list", "watch", "create", "update", "delete"]
+  # "pods/log" rules
+- apiGroups: ["", "metrics.k8s.io", "extensions", "apps"]
+  resources: ["pods/log"]
+  verbs: ["get", "list", "watch", "create", "update", "delete"]
+  # "pods/attach" rules
+- apiGroups: [""]
+  resources: ["pods/attach"]
+  verbs: ["get", "list", "watch", "create", "update", "delete"]
+  # "Secrets" rules
+- apiGroups: [""]
+  resources: ["secrets"]
+  verbs: ["get", "list", "watch", "create","update", "delete"]
+  # "deployments" rules
+- apiGroups: ["apps", "batch", "extensions"]
+  resources: ["deployments"]
+  verbs: ["get", "list", "watch", "create", "update", "delete"]
+  # "services" rules
+- apiGroups: [""]
+  resources: ["services"]
+  verbs: ["get", "list", "watch", "create", "update", "delete"]
+  # "configmaps" rules
+- apiGroups: [""]
+  resources: ["configmaps"]
+  verbs: ["get", "list", "watch", "create", "update", "delete"]  
+  # "Extensions" rules
+- apiGroups: ["batch", "extensions"]
+  resources: ["jobs"]
+  verbs: ["get", "list", "watch", "create", "update", "patch", "delete"]
+  # "cronjobs" rules
+- apiGroups: ["batch"]
+  resources: ["cronjobs"]
+  verbs: ["get", "list", "watch", "create", "update", "delete"]
+  # "daemonsets" rules
+- apiGroups: ["apps", "extensions"]
+  resources: ["daemonsets"]
+  verbs: ["get", "list", "watch", "create", "update", "delete"]
+  # "ingresses" rules
+- apiGroups: ["extensions"]
+  resources: ["ingresses"]
+  verbs: ["get", "list", "watch", "create", "update", "delete"]
+  # "replicasets" rules
+- apiGroups: ["apps", "extensions"]
+  resources: ["replicasets"]
+  verbs: ["get", "list", "watch", "create", "update", "delete"]
+  #statefulsets
+- apiGroups: ["apps"]
+  resources: ["statefulsets"]
+  verbs: ["get", "list", "watch", "create", "update", "delete"]
+  #replicationcontrollers
+- apiGroups: [""]
+  resources: ["replicationcontrollers"]
+  verbs: ["get", "list", "watch", "create", "update", "delete"]
+  #events
+- apiGroups: [""]
+  resources: ["events"]
+  verbs: ["get", "list", "watch", "create", "update", "delete"]
+  #persistentvolumeclaims
+- apiGroups: [""]
+  resources: ["persistentvolumeclaims"]
+  verbs: ["get", "list", "watch", "create", "update", "delete"]
+  #resourcequotas
+- apiGroups: [""]
+  resources: ["resourcequotas"]
+  verbs: ["get", "list", "watch"]
+  #limitranges : need to be finalized
+- apiGroups: [""]
+  resources: ["limitranges"]
+  verbs: ["get", "list", "watch"]
+  # NetworkPolicyExtension : need to be finalized
+- apiGroups: ["extensions"]
+  resources: ["networkpolicies"]
+  verbs: ["get", "list", "watch", "create", "update", "delete"]
+  # "Network Policies" : need to be finalized
+- apiGroups: ["networking.k8s.io"]
+  resources: ["networkpolicies"]
+  verbs: ["get", "list", "watch", "create", "update", "delete"]
+---
+# Below code creates 'namespace-admin-rbg' RoleBinding which attaches the AAD Group or users to a Role with Namespace admin priveleges. 
+---
+kind: RoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: namespace-admin-rbg
+  namespace: your_namespace_name
+subjects:
+- kind: Group
+  namespace: ail-stage-k8
+  name: "dbf77f23-589c-40a5-9ab5-2aeec50f021e" #Azure AD AdminsGroup ID 
+roleRef:
+  kind: Role #this must be Role or ClusterRole
+  name: namespace-admin-r # must match the name of the Role
+  apiGroup: rbac.authorization.k8s.io
+---

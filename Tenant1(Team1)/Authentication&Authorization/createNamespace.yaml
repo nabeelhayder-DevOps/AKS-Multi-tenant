@@ -1,0 +1,16 @@
+# Namespace Naming Convention(lowercase Only) : applicationname + billing_plan_id + env + servicecomponent
+
+
+# This below lines of code creates Namespace for your Team
+---
+# Created a project specific namespace 'your_namespace_name'
+---
+kind: Namespace
+apiVersion: v1
+metadata:
+  labels:
+    environment: dev
+    project_name: your_namespace_project_name
+    application_name: devopsdemo    
+    contact_kid: onwer_email
+  name: your_namespace_name

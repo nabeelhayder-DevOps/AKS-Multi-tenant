@@ -1,0 +1,15 @@
+# Creates a ResourceQuota 'requests-resourcequota' Specific to project namespace
+---
+apiVersion: v1
+kind: ResourceQuota
+metadata:
+  name: requests-resourcequota
+  namespace: your_namespace_name
+spec:
+  hard:
+    #pods: "4"
+    requests.cpu: "2" # metric - 'm' millicore, containers can get a single req with 500m or 50 requests with 10m 
+    requests.memory: 8Gi # metrics - 'Mib' or 'Gib' total requested memory by container < 1GB
+    limits.cpu: "2" # Maximum CPU which can be claimed by combined or single container
+    limits.memory: 8Gi # Maximum Memory which can be claimed by combined or single container
+---

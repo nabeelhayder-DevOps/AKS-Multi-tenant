@@ -1,0 +1,34 @@
+kind: ClusterRole
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: namespace-read-clusterrole-admins
+rules:
+- apiGroups: [""]
+  resources: ["namespaces"]
+  verbs: ["get", "list"]
+  # "Nodes" rules - Node rules are effective only on cluster-role-binding
+- apiGroups: [""]
+  resources: ["nodes"]
+  verbs: ["get", "list", "watch"]
+  #persistentvolumes
+  # "Persistent volumes" rules - are effective only on cluster-role-binding
+- apiGroups: [""]
+  resources: ["persistentvolumes"]
+  verbs: ["get", "list", "watch", "create", "update", "delete"]
+  #storageclasses
+  # "storageclasses" rules - are effective only on cluster-role-binding
+- apiGroups: ["storage.k8s.io"]
+  resources: ["storageclasses"]
+  verbs: ["get", "list", "watch", "create", "update", "delete"]
+For each group that needs access:
+kind: ClusterRoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: namespace-read-clusterrolebinding-admins
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: namespace-read-clusterrole-admins
+subjects:
+- kind: Group
+  name: "dbf77f23-589c-40a5-9ab5-2aeec50f021e" #Group ID of admins

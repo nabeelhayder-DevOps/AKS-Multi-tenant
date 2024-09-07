@@ -1,0 +1,19 @@
+kind: NetworkPolicy
+apiVersion: networking.k8s.io/v1
+metadata:
+  name: allow-access-to-specific-namespace-network-policy
+  namespace: your_namespace_name
+spec:
+  podSelector:
+    matchLabels:
+  ingress:
+  - from:
+    - namespaceSelector:
+        matchLabels:
+          label: 'label_value'
+    - podSelector: {}
+  egress:
+  - {}  
+  policyTypes:
+  - Egress
+  - Ingress
